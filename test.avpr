@@ -1,0 +1,105 @@
+{
+  "protocol": "test",
+  "doc": "Protocol used for unit testing",
+  "types": [
+    {
+      "name": "Kind",
+      "type": "enum",
+      "symbols": [
+        "FOO",
+        "BAR",
+        "BAZ"
+      ]
+    },
+    {
+      "name": "MD5",
+      "type": "fixed",
+      "size": 16
+    },
+    {
+      "name": "TestRecord",
+      "type": "record",
+      "fields": [
+        {
+          "name": "name",
+          "type": "string",
+          "order": "ignore"
+        },
+        {
+          "name": "kind",
+          "type": "Kind",
+          "order": "descending"
+        },
+        {
+          "name": "hash",
+          "type": "MD5"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "hello": {
+      "doc": "Send a friendly greeting",
+      "request": [
+        {
+          "name": "name",
+          "type": "string",
+          "default": ""
+        }
+      ],
+      "response": "string"
+    },
+    "echo": {
+      "doc": "Pretend you're in a cave!",
+      "request": [
+        {
+          "name": "record",
+          "type": "TestRecord"
+        }
+      ],
+      "response": "TestRecord"
+    },
+    "ack": {
+      "doc": "Send a one way message",
+      "request": [],
+      "response": "null",
+      "one-way": true
+    },
+    "serverCounter": {
+      "doc": "Server streams counts to the client",
+      "request": [],
+      "response": "int",
+      "stream": "response"
+    },
+    "clientCounter": {
+      "doc": "Client streams counts to the server",
+      "request": [
+        {
+          "name": "counter",
+          "type": "int"
+        }
+      ],
+      "response": {
+        "type": "array",
+        "items": "int"
+      },
+      "stream": "request"
+    },
+    "bidirCounter": {
+      "doc": "Client and server stream counts bi-directionally",
+      "request": [
+        {
+          "name": "counter",
+          "type": "int"
+        }
+      ],
+      "response": "int",
+      "stream": "bidir"
+    },
+    "unimplemented": {
+      "doc": "Intentionally not implemented",
+      "request": [],
+      "response": "null"
+    }
+  }
+}
