@@ -154,17 +154,17 @@ instead of:
 
     Foo(context.Context, *MsgA) (*MsgB, error)
 
-Here, the request type is `map[string]interface` (since `goavro` translates
+Here, the request type is `map[string]interface{}` (since `goavro` translates
 `record` to `map[string]interface{}`). The response type is `interface{}`. It's
-up to the server implementation to return the correct concrete type here. For
+up to the server implementation to return the correct concrete type. For
 example, if the Avro response type is also a `record` then the return should be
 `map[string]interface{}`. However, this isn't always the case. If the Avro
 response type is a primitive type like `int`, then the handler should just
 return `42`.
 
 If there is a type mismatch between what a server handler returns and what
-`goavro.BinaryFromNative` expects (based on the codec built from the Avro
-protocol specification), then this will produce a runtime error.
+`goavro.BinaryFromNative` expects (based on the `goavro.Codec` built from the
+Avro protocol specification), then this will produce a runtime error.
 
 ## Acknowledgements
 
