@@ -76,7 +76,7 @@ func ParseProtocol(r io.Reader) (*Protocol, error) {
 
 	var rp rawProtocol
 	if err := dec.Decode(&rp); err != nil {
-		return nil, errors.New(errPrefix + err.Error())
+		return nil, errors.New(errPrefix + " " + err.Error())
 	}
 
 	// Perform basic validations. Additional validations will be performed
@@ -109,7 +109,7 @@ func ParseProtocol(r io.Reader) (*Protocol, error) {
 
 	for name, rmsg := range rp.Messages {
 		if strings.TrimSpace(name) == "" {
-			return nil, errors.New(errPrefix + "missing or empty message name attribute")
+			return nil, errors.New(errPrefix + " missing or empty message name attribute")
 		}
 
 		if rmsg.OneWay && (rmsg.Response != "null" || len(rmsg.Errors) > 0) {
