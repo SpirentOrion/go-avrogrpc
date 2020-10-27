@@ -1,4 +1,4 @@
-module github.com/SpirentOrion/go-avro-gen-grpc
+module github.com/SpirentOrion/go-avrogrpc
 
 go 1.14
 
