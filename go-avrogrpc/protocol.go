@@ -5,10 +5,12 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"strings"
+	"regexp"
 
 	"github.com/linkedin/goavro/v2"
 )
+
+var validName = regexp.MustCompile(`^([A-Za-z_][A-Za-z0-9_]*)$`)
 
 // Protocol is the parsed, validated form of an Avro protocol definition.
 type Protocol struct {
@@ -81,8 +83,8 @@ func ParseProtocol(r io.Reader) (*Protocol, error) {
 
 	// Perform basic validations. Additional validations will be performed
 	// during codec construction below.
-	if rp.Protocol == "" {
-		return nil, errors.New(errPrefix + " missing or empty name attribute")
+	if !isValidName(rp.Protocol) {
+		return nil, errors.New(errPrefix + " missing or invalid protocol attribute")
 	}
 
 	if len(rp.Messages) == 0 {
@@ -108,8 +110,8 @@ func ParseProtocol(r io.Reader) (*Protocol, error) {
 	}
 
 	for name, rmsg := range rp.Messages {
-		if strings.TrimSpace(name) == "" {
-			return nil, errors.New(errPrefix + " missing or empty message name attribute")
+		if !isValidName(name) {
+			return nil, errors.New(errPrefix + " missing or invalid message name attribute")
 		}
 
 		if rmsg.OneWay && (rmsg.Response != "null" || len(rmsg.Errors) > 0) {
@@ -194,6 +196,10 @@ func ParseProtocol(r io.Reader) (*Protocol, error) {
 	}
 
 	return p, nil
+}
+
+func isValidName(name string) bool {
+	return validName.MatchString(name)
 }
 
 // fixupRequestParams merges named type definitions into a request schema, which
